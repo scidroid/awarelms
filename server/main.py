@@ -3,6 +3,7 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 from fastapi.responses import JSONResponse
 from deta import Deta
+import uvicorn
 
 deta = Deta(os.environ['KEY'])
 
@@ -21,7 +22,7 @@ def create(ms: Message):
 
 @app.get("/ms")
 def list():
-    ms = next(db.fetch())
+    ms = db.fetch()
     return ms
 
 @app.get("/ms/{uid}")
@@ -30,3 +31,5 @@ def get(uid: str):
     if m:
         return m
     return JSONResponse({"message": "not found"}, status_code=404)
+
+uvicorn.run(app,host="0.0.0.0",port="8080")
