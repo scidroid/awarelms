@@ -32,6 +32,7 @@ const App = () => {
       <h2>{m.name}</h2>
       <p>{m.description}</p>
       </div>
+      
     ))}
     </div>
   )
