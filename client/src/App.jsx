@@ -1,40 +1,55 @@
-import { useAuth0 } from "@auth0/auth0-react"
-import useFetch from "react-fetch-hook"
+import { useAuth0 } from "@auth0/auth0-react";
+import { useState } from "react";
 
 const addMsg = (name, description) => {
-  msg = JSON.stringify({
-    name: name,
-    description: description
-  })
   const URL = "https://lopsidedsophisticateddeveloper.scidroid.repl.co/ms";
   fetch(URL, {
-  method: 'POST',
-  body: msg,
-  headers:{
-    'Content-Type': 'application/json'
-  }
-}).then(res => res.json())
-.catch(error => console.error('Error:', error))
-.then(response => console.log('Success:', response));
+    method: 'POST',
+    mode: "no-cors",
+    body: JSON.stringify({
+      name: name,
+      description: description
+    })
+  }).then(res => res.json())
+    .catch(error => console.error('Error:', error))
+    .then(response => console.log('Success:', response));
 };
 
 const App = () => {
   const { loginWithRedirect, isAuthenticated } = useAuth0();
-  const {data} = useFetch("https://lopsidedsophisticateddeveloper.scidroid.repl.co/ms");
-  const ms = data._items;
+  const [input, setInput] = useState('');
+  const [input1, setInput1] = useState('');
   if (!isAuthenticated) {
     loginWithRedirect()
   }
   return (
-    <div>
-    {ms.map((m, k) => (
-      <div key={k}>
-      <h2>{m.name}</h2>
-      <p>{m.description}</p>
+    <section class="text-gray-600 body-font relative">
+      <div class="container px-5 py-24 mx-auto">
+        <div class="flex flex-col text-center w-full mb-12">
+          <h1 class="sm:text-3xl text-2xl font-medium title-font mb-4 text-gray-900">Add task</h1>
+          <p class="lg:w-2/3 mx-auto leading-relaxed text-base"></p>
+        </div>
+        <div class="lg:w-1/2 md:w-2/3 mx-auto">
+          <div class="flex flex-wrap -m-2">
+            <div class="p-2 w-full">
+              <div class="relative">
+                <label for="email" class="leading-7 text-sm text-gray-600">Name</label>
+                <input value={input} onInput={e => setInput(e.target.value)} class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" />
+              </div>
+            </div>
+            <div class="p-2 w-full">
+              <div class="relative">
+                <label for="message" class="leading-7 text-sm text-gray-600">Message</label>
+                <textarea value={input1} onInput={e => setInput1(e.target.value)} id="message" name="message" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 h-32 text-base outline-none text-gray-700 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out"></textarea>
+              </div>
+            </div>
+            <div class="p-2 w-full">
+              <button onClick={() => addMsg(input, input1)} class="flex mx-auto text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg">Add task</button>
+            </div>
+          </div>
+        </div>
       </div>
-      
-    ))}
-    </div>
+    </section>
   )
 }
 
